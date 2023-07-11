@@ -1,7 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import PageLayout from "../layout/page";
 import { Flex, Spacer, Input, Button, useToast } from "@chakra-ui/react";
 import ActionInput from "../components/ActionInput";
@@ -23,10 +30,8 @@ const Index = (state: IndexProps) => {
   const toast = useToast();
   const navigate = useNavigate();
   const dispatch = useContext(GlobalDispatchContext);
-  const cities: string[] = ["London", "Paris", "New York", "Tokyo", "Sydney"];
   const [city, setCity] = useState("");
-  const [cityWeather, setCityWeather] = useState({});
-  const [allWeather, setAllWeather] = useState([]);
+  const [allWeather, setAllWeather] = useState([] as Weather[]);
 
   const handleCityWeather = () => {
     const config = {
@@ -40,8 +45,9 @@ const Index = (state: IndexProps) => {
       .request(config)
       .then((res) => {
         console.log(res);
-        setCityWeather(res.data);
-        navigate(`/${city}`, { state: { weather: res.data } });
+        navigate(`/${encodeURI(res.data?.location.name)}`, {
+          state: { weather: res.data },
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -52,11 +58,11 @@ const Index = (state: IndexProps) => {
           duration: 3000,
           isClosable: true,
         });
-        setCityWeather({});
       });
   };
 
   useEffect(() => {
+    console.log(state);
     if (state.isLoggedIn && state.user.cities.length > 0) {
       const config = {
         method: "get",
@@ -88,16 +94,9 @@ const Index = (state: IndexProps) => {
             handleOnChange={setCity}
             handleOnClick={handleCityWeather}
           />
-          {cityWeather && (
-            <Flex>
-              <Spacer />
-              {/* <WeatherCard city={cityWeather} /> */}
-              <Spacer />
-            </Flex>
-          )}
           <WeatherCardsLayout>
             <ErrorBoundary fallback={<div>Could not load weather</div>}>
-              {allWeather.map((weather) => {
+              {allWeather?.map((weather) => {
                 const _weather: Weather = weather;
                 return (
                   <WeatherCard

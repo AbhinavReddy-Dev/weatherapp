@@ -36,6 +36,14 @@ router.post("/create/", async (req, res) => {
 
 // add a new city to user
 router.patch("/add_city/:id", async (req, res) => {
+  // check if city is already in user's list
+  const user_q = { _id: new ObjectId(req.params.id) };
+  const user = await userDocument.findOne(user_q);
+  if (user.cities.includes(req.body.city)) {
+    res.send("City already in user's list").status(200);
+    return;
+  }
+
   const query = { _id: new ObjectId(req.params.id) };
   const update = {
     $push: { cities: req.body.city },
@@ -47,7 +55,7 @@ router.patch("/add_city/:id", async (req, res) => {
 });
 
 // remove a city from a user
-router.delete("/remove_city/:id/:city", async (req, res) => {
+router.patch("/remove_city/:id/:city", async (req, res) => {
   // url decode the city name
   req.params.city = decodeURIComponent(req.params.city);
   const query = { _id: new ObjectId(req.params.id) };
@@ -55,7 +63,7 @@ router.delete("/remove_city/:id/:city", async (req, res) => {
     $pull: { cities: req.params.city },
     $set: { updated_date: new Date() },
   };
-
+  console.log(update);
   let result = await userDocument.updateOne(query, update);
   res.send(result).status(200);
 });
