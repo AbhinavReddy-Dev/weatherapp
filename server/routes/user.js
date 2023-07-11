@@ -16,11 +16,22 @@ router.get("/:id", async (req, res) => {
 
 // Add a new user
 router.post("/create/", async (req, res) => {
+  let query = { username: req.body.username };
+  let user = await userDocument.findOne(query);
+  if (user) {
+    res.send(user).status(200);
+    return;
+  }
   let newDocument = req.body;
-  newDocument.created_date = new Date();
-  newDocument.updated_date = new Date();
+  const newDate = new Date();
+  newDocument.created_date = newDate;
+  newDocument.updated_date = newDate;
+  newDocument.cities = [];
   let result = await userDocument.insertOne(newDocument);
-  res.send(result).status(204);
+  // resend the document to the client
+  const query2 = { _id: new ObjectId(result.insertedId) };
+  let result2 = await userDocument.findOne(query2);
+  res.send(result2).status(200);
 });
 
 // add a new city to user
