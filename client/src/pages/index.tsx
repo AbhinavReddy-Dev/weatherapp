@@ -22,6 +22,7 @@ const Index = () => {
 
   const [allWeather, setAllWeather] = useState([] as Weather[]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const fetchAllWeather = () => {
     setIsLoading(() => true);
@@ -40,6 +41,7 @@ const Index = () => {
       })
       .catch((err) => {
         setAllWeather([]);
+        setIsError(() => true);
         toast({
           title: "Error",
           description: "Unable to retrieve weather",
@@ -92,6 +94,16 @@ const Index = () => {
                 />
               );
             })}
+          {state.user.cities.length === 0 && (
+            <Text fontFamily={"mono"} fontSize={"sm"}>
+              Add a city to get started.
+            </Text>
+          )}
+          {isError && !isLoading && (
+            <Text fontFamily={"mono"} fontSize={"sm"}>
+              Could not load weather data, try again later.
+            </Text>
+          )}
         </ErrorBoundary>
       </WeatherCardsLayout>
     </PageLayout>
