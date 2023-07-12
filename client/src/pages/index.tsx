@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useContext, useEffect, useState } from "react";
 import PageLayout from "../layout/page";
-import { useToast, Skeleton, Text } from "@chakra-ui/react";
+import { useToast, Box, Text } from "@chakra-ui/react";
 import WeatherCardsLayout from "../layout/weathercards";
 import WeatherCard from "../components/WeatherCard";
 import axios from "axios";
@@ -48,8 +48,9 @@ const Index = () => {
           isClosable: true,
         });
       });
-
-    setIsLoading(() => false);
+    setTimeout(() => {
+      setIsLoading(() => false);
+    }, 300);
   };
 
   useEffect(() => {
@@ -69,6 +70,16 @@ const Index = () => {
               Could not load weather data, try again later.
             </Text>
           }>
+          {isLoading &&
+            state.user.cities.map(() => (
+              <Box
+                maxW={"350px"}
+                minH={"250px"}
+                borderWidth={1}
+                borderRadius={15}
+                mx={[2, 1, 0]}
+                bg={"gray.300"}></Box>
+            ))}
           {!isLoading &&
             allWeather?.map((weather) => {
               const _weather: Weather = weather;
