@@ -1,0 +1,38 @@
+# docker compose file for the project React + Node + MongoDB Atlas
+
+services:
+  client:
+    image: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - server
+    networks:
+      - mern-app-network
+
+  server:
+    image: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb+srv://abhinavreddydev:6la2MfRJL22gYihu@abhinavreddy.8j1tqbf.mongodb.net/?retryWrites=true&w=majority
+      - WEATHER_API_KEY=62eb0c54fb21437a87c185842231007
+    networks:
+      - mern-app-network
+networks:
+  mern-app-network:

@@ -12,6 +12,11 @@ try {
   console.error(e);
 }
 
-let db = conn.db("weather_app_server");
+const collectionName =
+  process.env.NODE_ENV === "development"
+    ? "weather_app_server"
+    : "weather_app_prod";
+
+let db = conn.db(collectionName);
 
 export default db;
