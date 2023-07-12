@@ -149,7 +149,16 @@ const City = () => {
       </HStack>
       <Container maxW={"md"} mt={10}>
         <VStack spacing={5}>
-          <VStack spacing={1} w={"100%"} alignItems={"start"}>
+          <VStack
+            zIndex={2}
+            position={["sticky", "relative"]}
+            top={5}
+            p={[5, 0]}
+            borderRadius={15}
+            backdropFilter={"blur(30px)"}
+            spacing={1}
+            w={"100%"}
+            alignItems={"start"}>
             <Heading
               as={"h4"}
               textColor={"blue.800"}
@@ -157,7 +166,7 @@ const City = () => {
               fontFamily={"mono"}>
               {location?.name}
             </Heading>
-            <Text fontSize={"small"} textColor={"gray.500"}>
+            <Text fontSize={"small"} textColor={"gray.700"}>
               {location?.country}
             </Text>
           </VStack>
@@ -208,7 +217,7 @@ const City = () => {
             alignItems={"normal"}
             justifyContent={"space-between"}
             w={"100%"}
-            textColor={"gray.500"}
+            textColor={"gray.700"}
             fontSize={"lg"}
             fontWeight={"bold"}
             fontFamily={"monospace"}>
