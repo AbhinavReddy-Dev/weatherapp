@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Flex, Heading, Button, Text, Icon } from "@chakra-ui/react";
 import { GlobalDispatchContext } from "../state";
 import { GlobalStateContext } from "../state";
@@ -11,7 +11,6 @@ const NavBar = () => {
   const handleLogout = () => {
     dispatch({
       type: "LOGOUT_USER",
-      payload: undefined,
     });
   };
 
@@ -34,7 +33,7 @@ const NavBar = () => {
       {isLoggedIn && (
         <Flex alignItems={"center"} gap={5}>
           <Text fontSize={["small", "medium"]} textColor={"gray.800"}>
-            Welcome, {user?.username}!
+            Hi, {user?.username}!
           </Text>
           <Button
             borderRadius={50}

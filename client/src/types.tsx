@@ -51,6 +51,7 @@ export interface Current {
   humidity: number;
   cloud: number;
   uv: number;
+  is_day: number;
 }
 
 export interface Location {
@@ -64,4 +65,16 @@ export interface Weather {
   forecast: {
     forecastday: Forecast[];
   };
+}
+
+export interface ActionInputProps {
+  placeholder: string;
+  buttonLabel: string;
+  handleOnClick: () => void;
+  handleOnChange: (value: string) => void;
+}
+
+export interface ComponentProps {
+  user: User;
+  isLoggedIn: boolean;
 }

@@ -6,46 +6,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 import { Container, Box, Text, Link } from "@chakra-ui/react";
-import { Forecast } from "../types";
+import { Current, Forecast } from "../types";
 import NavBar from "../components/NavBar";
 interface PageLayoutProps {
   forecast?: Forecast;
+  current?: Current;
   children: React.ReactNode;
 }
 const PageLayout = (props: PageLayoutProps) => {
-  // calculate if moon is up or sun is up
-
-  function convertTimeToNumber(timeString: string) {
-    const [time, period] = timeString.split(" ");
-    const [_hours, _minutes] = time.split(":") as [string, string];
-
-    let hours = parseInt(_hours, 10);
-    const minutes = parseInt(_minutes, 10);
-
-    if (period === "PM" && hours !== 12) {
-      hours += 12;
-    } else if (period === "AM" && hours === 12) {
-      hours = 0;
-    }
-    const timeInNumber = hours * 100 + minutes;
-    return timeInNumber;
-  }
-
-  // Get current time
-  const currentTime = new Date();
-  const hours = currentTime.getHours();
-  const minutes = currentTime.getMinutes();
-  // Convert hours and minutes to number format
-  const currentTimeInNumber = hours * 100 + minutes;
-
-  // Check if sunrise or sunset has passed
-  const sunrise =
-    convertTimeToNumber(props.forecast?.astro?.sunrise || "") <
-      currentTimeInNumber &&
-    currentTimeInNumber <
-      convertTimeToNumber(props.forecast?.astro?.sunset || "");
+  const is_day = props.current?.is_day;
   const is_moon_up = props.forecast?.astro?.is_moon_up;
-  // const is_sun_up = props.forecast?.astro?.is_sun_up;
 
   return (
     <Container maxW={"1200px"} minH={"100vh"} p={5} pb={0}>
@@ -58,12 +28,12 @@ const PageLayout = (props: PageLayoutProps) => {
         left={0}
         bgGradient={
           props.forecast?.astro
-            ? sunrise
+            ? is_day
               ? "linear(to-br, orange.100, blue.100)"
-              : is_moon_up && !sunrise
+              : is_moon_up && !is_day
               ? "linear(to-bl, blackAlpha.500, blue.100)"
-              : !is_moon_up && !sunrise
-              ? "linear(to-bl, blue.300, blue.200)"
+              : !is_moon_up && !is_day
+              ? "linear(to-bl, gray.400, blue.500)"
               : ""
             : ""
         }></Box>
@@ -73,11 +43,15 @@ const PageLayout = (props: PageLayoutProps) => {
         h={400}
         w={400}
         top={-100}
-        right={is_moon_up && !sunrise ? -100 : undefined}
-        left={sunrise && !is_moon_up ? -100 : undefined}
+        right={is_moon_up && !is_day ? -100 : undefined}
+        left={is_day ? -100 : undefined}
         borderRadius={"50%"}
         bg={
-          sunrise ? "orange.200" : !sunrise && is_moon_up ? "gray.300" : ""
+          is_day && props.current?.cloud && props.current.cloud <= 40
+            ? "orange.200"
+            : !is_day && is_moon_up
+            ? "gray.300"
+            : ""
         }></Box>
       <NavBar />
       {props.children}

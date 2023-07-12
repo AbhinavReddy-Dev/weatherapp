@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import React from "react";
 import {
   Container,
   Heading,
@@ -39,7 +38,9 @@ const WeatherCard = ({
       shadow={"sm"}
       p={5}
       py={2}
-      bgGradient={"linear(to-tr, gray.50, blue.50)"}
+      bgGradient={`linear(to-tr, gray.50, ${
+        current.is_day ? "orange.50" : "blue.50"
+      })`}
       borderColor={"gray.200"}
       as={"button"}
       position={"relative"}

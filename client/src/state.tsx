@@ -5,19 +5,32 @@
 import React, { Dispatch } from "react";
 import { User } from "./types";
 
-export const GlobalStateContext = React.createContext(
-  {} as { user: User; isLoggedIn: boolean }
-);
-export const GlobalDispatchContext = React.createContext(
-  {} as Dispatch<{ type: any; payload: any }>
+type State = {
+  user: User | undefined;
+  isLoggedIn: boolean;
+};
+
+type Action =
+  | { type: "LOGIN_USER"; payload: User }
+  | { type: "LOGOUT_USER" }
+  | { type: "ADD_CITY"; payload: string }
+  | { type: "REMOVE_CITY"; payload: string };
+
+export const GlobalStateContext = React.createContext<State>({
+  user: undefined,
+  isLoggedIn: false,
+});
+
+export const GlobalDispatchContext = React.createContext<Dispatch<Action>>(
+  {} as Dispatch<Action>
 );
 
-const initialState = {
+const initialState: State = {
   user: undefined,
   isLoggedIn: false,
 };
 
-function reducer(state: any, action: { type: any; payload: any | undefined }) {
+function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "LOGIN_USER": {
       return {
@@ -31,15 +44,14 @@ function reducer(state: any, action: { type: any; payload: any | undefined }) {
         ...state,
         user: undefined,
         isLoggedIn: false,
-        all_weather: [],
       };
     }
     case "ADD_CITY": {
       return {
         ...state,
         user: {
-          ...state.user,
-          cities: [...state.user.cities, action.payload],
+          ...state.user!,
+          cities: [...state.user!.cities, action.payload],
         },
       };
     }
@@ -47,8 +59,8 @@ function reducer(state: any, action: { type: any; payload: any | undefined }) {
       return {
         ...state,
         user: {
-          ...state.user,
-          cities: state.user.cities.filter(
+          ...state.user!,
+          cities: state.user!.cities.filter(
             (city: string) => city !== action.payload
           ),
         },
@@ -59,7 +71,7 @@ function reducer(state: any, action: { type: any; payload: any | undefined }) {
   }
 }
 
-const GlobalProvider = (props: any) => {
+const GlobalProvider = (props: { children: React.ReactNode }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   return (
     <GlobalStateContext.Provider value={state}>

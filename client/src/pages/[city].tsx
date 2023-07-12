@@ -1,16 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React, { useContext, useEffect, useState } from "react";
-
-import { useParams, NavLink, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import PageLayout from "../layout/page";
-import axios from "axios";
-import { server_url } from "../config";
-import { GlobalDispatchContext } from "../state";
-import { GlobalStateContext } from "../state";
 import { FiSunrise, FiSunset } from "react-icons/fi";
 import {
-  useToast,
-  Button,
   Breadcrumb,
   BreadcrumbItem,
   HStack,
@@ -25,11 +18,9 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { Current, Forecast, Location } from "../types";
+import ToggleCityButtonGroup from "../components/ToggleCityButtonGroup";
 
 const City = () => {
-  const toast = useToast();
-  const dispatch = useContext(GlobalDispatchContext);
-  const state = useContext(GlobalStateContext);
   const {
     state: { location, current, forecast },
   } = useLocation() as {
@@ -39,89 +30,8 @@ const City = () => {
       forecast: { forecastday: Forecast[] };
     };
   };
+
   const [futureForecast, setFutureForecast] = useState([] as Forecast[]);
-  const { city } = useParams() as { city: string };
-  console.log(location, current, forecast);
-  const handleAddCity = () => {
-    const data = JSON.stringify({
-      city,
-    });
-
-    const config = {
-      method: "patch",
-      maxBodyLength: Infinity,
-      url: `${server_url}user/add_city/${state.user._id}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        toast({
-          title: "City added!",
-          description: "City added to your weather list.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        dispatch({
-          type: "ADD_CITY",
-          payload: city,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        toast({
-          title: "City not added! Try again.",
-          description: "Error adding city to your weather list.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      });
-  };
-
-  const handleRemoveCity = () => {
-    const config = {
-      method: "patch",
-      maxBodyLength: Infinity,
-      url: `${server_url}user/remove_city/${state.user._id}/${city}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        toast({
-          title: "City removed!",
-          description: "City removed from your weather list.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        dispatch({
-          type: "REMOVE_CITY",
-          payload: city,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        toast({
-          title: "City not removed! Try again.",
-          description: "Error removing city from your weather list.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      });
-  };
 
   useEffect(() => {
     if (forecast) {
@@ -130,7 +40,8 @@ const City = () => {
   }, [forecast]);
 
   return (
-    <PageLayout forecast={forecast?.forecastday[0]}>
+    <PageLayout forecast={forecast?.forecastday[0]} current={current}>
+      {/* Breadcrumb navigation */}
       <HStack
         maxW={"md"}
         mx={"auto"}
@@ -143,11 +54,12 @@ const City = () => {
             <NavLink to="/">Home</NavLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <NavLink to="#">{city}</NavLink>
+            <NavLink to="#">{location.name}</NavLink>
           </BreadcrumbItem>
         </Breadcrumb>
       </HStack>
       <Container maxW={"md"} mt={10}>
+        {/* Weather card data (location, current, forecast) */}
         <VStack spacing={5}>
           <VStack
             zIndex={2}
@@ -194,13 +106,13 @@ const City = () => {
                 fontSize={"sm"}
                 fontFamily={"mono"}
                 borderRadius={20}
-                bg={"gray.100"}
-                border={"1px solid"}
-                borderColor={"gray.200"}
+                bg={"gray.200"}
+                borderWidth={1}
+                borderColor={"gray.300"}
                 textColor={"gray.700"}
                 px={3}
                 py={1}
-                textAlign={"start"}>
+                textAlign={"center"}>
                 {current?.condition.text}
               </Text>
             </VStack>
@@ -229,30 +141,36 @@ const City = () => {
             <Text textAlign={"end"}>🧴 {current?.uv}UV</Text>
           </HStack>
         </VStack>
+
         <Divider my={10} borderWidth={1} borderColor={"gray.50"} />
+
+        {/* Sunrise and Sunset (forecast, icons) */}
         <HStack justifyContent={"space-evenly"}>
           <VStack>
-            <Icon color={"orange.500"} as={FiSunrise} h={10} w={10}></Icon>
+            <Icon color={"orange.600"} as={FiSunrise} h={10} w={10}></Icon>
             <Text
               fontFamily={"sans-serif"}
               fontWeight={"bold"}
               fontSize={"xs"}
-              textColor={"gray.600"}>
+              textColor={"gray.700"}>
               {forecast?.forecastday[0].astro.sunrise}
             </Text>
           </VStack>
           <VStack>
-            <Icon color={"orange.500"} as={FiSunset} h={10} w={10}></Icon>
+            <Icon color={"orange.600"} as={FiSunset} h={10} w={10}></Icon>
             <Text
               fontFamily={"sans-serif"}
               fontWeight={"bold"}
               fontSize={"xs"}
-              textColor={"gray.600"}>
+              textColor={"gray.700"}>
               {forecast?.forecastday[0].astro.sunset}
             </Text>
           </VStack>
         </HStack>
+
         <Divider my={10} borderWidth={1} borderColor={"gray.50"} />
+
+        {/* Today's hourly weather (forecast) */}
         <Text
           textAlign={"left"}
           fontFamily={"sans-serif"}
@@ -267,7 +185,7 @@ const City = () => {
                 w={"max-content"}
                 fontSize={"small"}
                 fontWeight={"semibold"}
-                textColor={"gray.600"}>
+                textColor={"blue.800"}>
                 {new Date(hour.time)
                   .toLocaleTimeString("en-US", {
                     hour: "numeric",
@@ -286,6 +204,8 @@ const City = () => {
             </VStack>
           ))}
         </HStack>
+
+        {/* Future forecast for 3 days (futureForecast) */}
         <VStack mt={5} mb={10} gap={5}>
           {futureForecast?.map((day) => (
             <SimpleGrid
@@ -311,6 +231,7 @@ const City = () => {
                 </Text>
               </Flex>
               <Image
+                mx={5}
                 w={10}
                 h={10}
                 overflow={"visible"}
@@ -327,25 +248,9 @@ const City = () => {
             </SimpleGrid>
           ))}
         </VStack>
-        {!state.user.cities.includes(city) ? (
-          <Button
-            w={"100%"}
-            fontSize={"small"}
-            bg={"blue.300"}
-            textColor={"blue.800"}
-            onClick={handleAddCity}>
-            Add city
-          </Button>
-        ) : (
-          <Button
-            w={"100%"}
-            fontSize={"small"}
-            onClick={handleRemoveCity}
-            bg={"yellow.50"}
-            textColor={"yellow.700"}>
-            Remove city
-          </Button>
-        )}
+
+        {/* Buttons to add or remove city (state, handleAddCity, handleRemoveCity) */}
+        <ToggleCityButtonGroup />
       </Container>
     </PageLayout>
   );

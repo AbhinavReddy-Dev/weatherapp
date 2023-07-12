@@ -40,7 +40,8 @@ router.patch("/add_city/:id", async (req, res) => {
   const user_q = { _id: new ObjectId(req.params.id) };
   const user = await userDocument.findOne(user_q);
   if (user.cities.includes(req.body.city)) {
-    res.send("City already in user's list").status(200);
+    // send res with conflict code
+    res.send("City already in user's list").status(409);
     return;
   }
 
@@ -63,7 +64,6 @@ router.patch("/remove_city/:id/:city", async (req, res) => {
     $pull: { cities: req.params.city },
     $set: { updated_date: new Date() },
   };
-  console.log(update);
   let result = await userDocument.updateOne(query, update);
   res.send(result).status(200);
 });

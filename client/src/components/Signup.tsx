@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import ActionInput from "./ActionInput";
 import axios from "axios";
 import { GlobalDispatchContext } from "../state";
@@ -13,6 +13,7 @@ const Signup = () => {
   const toast = useToast();
   const dispatch = useContext(GlobalDispatchContext);
   const [username, setUsername] = useState("");
+
   const handleLoginSignup = () => {
     if (username === "") {
       toast({
@@ -34,6 +35,7 @@ const Signup = () => {
       });
       return;
     }
+
     const config = {
       method: "post",
       url: `${server_url}user/login/`,
@@ -44,16 +46,30 @@ const Signup = () => {
         "Content-Type": "application/json",
       },
     };
+
     axios
       .request(config)
       .then((res) => {
-        console.log(res);
+        toast({
+          title: "Success",
+          description: "Successfully logged in or signed up",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
         dispatch({ type: "LOGIN_USER", payload: res.data });
       })
       .catch((err) => {
-        console.log(err);
+        toast({
+          title: "Error",
+          description: "Unable to login or signup",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       });
   };
+
   return (
     <ActionInput
       placeholder="Enter username"

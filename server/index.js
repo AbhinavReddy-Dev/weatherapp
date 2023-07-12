@@ -15,7 +15,7 @@ app.use(express.json());
 app.use("/api/v1/user", user);
 app.use("/api/v1/weather", weather);
 // Global error handling
-app.use((err, _req, res, next) => {
+app.use((err, _req, res, _next) => {
   res.status(500).send("Uh oh! An unexpected error occured. " + err);
 });
 
