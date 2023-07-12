@@ -7,6 +7,7 @@ const WeatherCardsLayout = ({ children }: PropsWithChildren) => {
     <Grid
       w={["", "xl"]}
       mx={"auto"}
+      mt={16}
       maxW={"90vw"}
       templateColumns={["1fr", "repeat(2, 1fr)"]}
       gap={10}>

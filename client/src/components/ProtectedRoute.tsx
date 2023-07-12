@@ -9,6 +9,7 @@ const ProtectedRoute = ({ isLoggedIn }: ProtectedRouteProps) => {
   if (!isLoggedIn) {
     return <Navigate to="/" replace />;
   }
+  // can use children when using this commp as a wrapper.
   return <Outlet />;
 };
 

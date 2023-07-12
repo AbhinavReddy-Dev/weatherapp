@@ -36,7 +36,7 @@ const Signup = () => {
     }
     const config = {
       method: "post",
-      url: `${server_url}user/create/`,
+      url: `${server_url}user/login/`,
       data: JSON.stringify({
         username: username,
       }),

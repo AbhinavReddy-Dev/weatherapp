@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import React, { Dispatch } from "react";
-import { User, Weather } from "./types";
+import { User } from "./types";
 
 export const GlobalStateContext = React.createContext(
   {} as { user: User; isLoggedIn: boolean }

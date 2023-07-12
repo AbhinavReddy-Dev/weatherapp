@@ -15,7 +15,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Add a new user
-router.post("/create/", async (req, res) => {
+router.post("/login/", async (req, res) => {
   let query = { username: req.body.username };
   let user = await userDocument.findOne(query);
   if (user) {

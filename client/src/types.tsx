@@ -8,39 +8,59 @@ export interface User {
 
 export interface Forecast {
   date: string;
-  sunrise: string;
-  sunset: string;
-  moonrise: string;
-  moonset: string;
+  astro: {
+    sunrise: string;
+    sunset: string;
+    moonrise: string;
+    moonset: string;
+    is_moon_up: number;
+    is_sun_up: number;
+  };
   day: {
     maxtemp_c: number;
     maxtemp_f: number;
     mintemp_c: number;
     mintemp_f: number;
     daily_chance_of_rain: string;
-  };
-}
-
-export interface Weather {
-  location: {
-    name: string;
-    country: string;
-  };
-  current: {
-    temp_c: number;
-    temp_f: number;
     condition: {
       text: string;
       icon: string;
     };
-    wind_kph: number;
-    wind_mph: number;
-    precip_mm: number;
-    precip_in: number;
-    humidity: number;
-    cloud: number;
-    uv: number;
   };
+  hour: {
+    time: string;
+    temp_c: number;
+    temp_f: number;
+    condition: {
+      icon: string;
+    };
+  }[];
+}
+
+export interface Current {
+  temp_c: number;
+  temp_f: number;
+  condition: {
+    text: string;
+    icon: string;
+  };
+  wind_kph: number;
+  wind_mph: number;
+  precip_mm: number;
+  precip_in: number;
+  humidity: number;
+  cloud: number;
+  uv: number;
+}
+
+export interface Location {
+  name: string;
+  country: string;
+}
+
+export interface Weather {
+  location: Location;
+  current: Current;
   forecast: {
     forecastday: Forecast[];
   };

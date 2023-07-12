@@ -18,7 +18,7 @@ const ActionInput: React.FC<ActionInputProps> = ({
     <Flex
       maxW={["90vw", "xl"]}
       gap={4}
-      mb={10}
+      mt={14}
       mx={"auto"}
       flexDirection={["column", "row", "row"]}>
       <Input
@@ -27,11 +27,7 @@ const ActionInput: React.FC<ActionInputProps> = ({
         onChange={(e) => handleOnChange(e.target.value)}
       />
 
-      <Button
-        px={10}
-        textColor={"green.900"}
-        bg={"green.300"}
-        onClick={handleOnClick}>
+      <Button px={10} colorScheme="green" onClick={handleOnClick}>
         {buttonLabel}
       </Button>
     </Flex>
