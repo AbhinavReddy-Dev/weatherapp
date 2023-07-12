@@ -9,7 +9,6 @@ import { useToast, Skeleton, Text } from "@chakra-ui/react";
 import WeatherCardsLayout from "../layout/weathercards";
 import WeatherCard from "../components/WeatherCard";
 import axios from "axios";
-import Signup from "../components/Signup";
 import { Weather, ComponentProps } from "../types";
 import { server_url } from "../config";
 import { GlobalStateContext } from "../state";
@@ -25,7 +24,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAllWeather = () => {
-    setIsLoading(true);
+    setIsLoading(() => true);
 
     const config = {
       method: "get",
@@ -37,13 +36,10 @@ const Index = () => {
     axios
       .request(config)
       .then((res) => {
-        console.log(res);
         setAllWeather(res.data);
-        setIsLoading(false);
       })
       .catch((err) => {
         setAllWeather([]);
-        setIsLoading(false);
         toast({
           title: "Error",
           description: "Unable to retrieve weather",
@@ -52,6 +48,8 @@ const Index = () => {
           isClosable: true,
         });
       });
+
+    setIsLoading(() => false);
   };
 
   useEffect(() => {
@@ -62,37 +60,29 @@ const Index = () => {
 
   return (
     <PageLayout>
-      {state.isLoggedIn ? (
-        <>
-          <CityWeatherInputGroup allWeather={allWeather} />
-          <WeatherCardsLayout>
-            <CurrentLocationWeatherCard />
-            <ErrorBoundary
-              fallback={
-                <Text fontFamily={"mono"} fontSize={"sm"}>
-                  Could not load weather data, try again later.
-                </Text>
-              }>
-              <Skeleton borderRadius={15} isLoaded={!isLoading}>
-                {!isLoading &&
-                  allWeather?.map((weather) => {
-                    const _weather: Weather = weather;
-                    return (
-                      <WeatherCard
-                        location={_weather.location}
-                        current={_weather.current}
-                        forecast={_weather.forecast}
-                        key={_weather.location.name}
-                      />
-                    );
-                  })}
-              </Skeleton>
-            </ErrorBoundary>
-          </WeatherCardsLayout>
-        </>
-      ) : (
-        <Signup />
-      )}
+      <CityWeatherInputGroup allWeather={allWeather} />
+      <WeatherCardsLayout>
+        <CurrentLocationWeatherCard />
+        <ErrorBoundary
+          fallback={
+            <Text fontFamily={"mono"} fontSize={"sm"}>
+              Could not load weather data, try again later.
+            </Text>
+          }>
+          {!isLoading &&
+            allWeather?.map((weather) => {
+              const _weather: Weather = weather;
+              return (
+                <WeatherCard
+                  location={_weather.location}
+                  current={_weather.current}
+                  forecast={_weather.forecast}
+                  key={_weather.location.name}
+                />
+              );
+            })}
+        </ErrorBoundary>
+      </WeatherCardsLayout>
     </PageLayout>
   );
 };

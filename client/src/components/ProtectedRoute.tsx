@@ -6,7 +6,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ isLoggedIn }: ProtectedRouteProps) => {
   if (!isLoggedIn) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
   // can use children when using this commp as a wrapper.
   return <Outlet />;

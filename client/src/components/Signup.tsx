@@ -9,7 +9,9 @@ import { GlobalDispatchContext } from "../state";
 import "dotenv";
 import { server_url } from "../config";
 import { useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
+  const navigate = useNavigate();
   const toast = useToast();
   const dispatch = useContext(GlobalDispatchContext);
   const [username, setUsername] = useState("");
@@ -58,6 +60,7 @@ const Signup = () => {
           isClosable: true,
         });
         dispatch({ type: "LOGIN_USER", payload: res.data });
+        navigate("/");
       })
       .catch((err) => {
         toast({
