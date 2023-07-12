@@ -15,8 +15,6 @@ services:
       - NODE_ENV=production
     depends_on:
       - server
-    networks:
-      - mern-app-network
 
   server:
     image: server
@@ -32,7 +30,13 @@ services:
       - NODE_ENV=production
       - MONGO_URI=mongodb+srv://abhinavreddydev:6la2MfRJL22gYihu@abhinavreddy.8j1tqbf.mongodb.net/?retryWrites=true&w=majority
       - WEATHER_API_KEY=62eb0c54fb21437a87c185842231007
-    networks:
-      - mern-app-network
-networks:
-  mern-app-network:
+
+  nginx:
+    restart: always
+    build: ./nginx/
+    depends_on:
+      - server
+    ports:
+      - 80:80
+    links:
+      - server:server
