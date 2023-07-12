@@ -9,6 +9,7 @@ WORKDIR /app
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 ENV ATLAS_URI mongodb+srv://abhinavreddydev:6la2MfRJL22gYihu@abhinavreddy.8j1tqbf.mongodb.net/?retryWrites=true&w=majority
+
 # copy package.json and package-lock.json
 COPY package*.json ./
 

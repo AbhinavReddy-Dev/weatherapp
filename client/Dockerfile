@@ -10,6 +10,8 @@ WORKDIR /app
 # Copy the file from your host to your current location.
 COPY package*.json ./
 
+ENV NODE_ENV production
+
 # Run the command inside your image filesystem.
 RUN npm install
 
