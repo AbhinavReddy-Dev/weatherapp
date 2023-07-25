@@ -69,10 +69,20 @@ const PageLayout = (props: PageLayoutProps) => {
           <span>&copy; {new Date().getFullYear()}</span>
           <Link
             ml={2}
-            title="GitHub Link for Abhinav Reddy"
+            title="Portfolio Link for Abhinav Reddy"
             target="_blank"
-            href="https://github.com/AbhinavReddy-Dev">
+            href="https://www.abhinavreddy.dev/">
             Abhinav Reddy
+          </Link>
+        </Text>
+        <Text fontSize={"x-small"} textColor={"gray.500"}>
+          Powered by{" "}
+          <Link
+            textColor={"green.600"}
+            target="_blank"
+            href="https://www.weatherapi.com/"
+            title="Free Weather API">
+            WeatherAPI.com
           </Link>
         </Text>
       </Box>

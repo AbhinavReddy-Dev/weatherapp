@@ -6,6 +6,8 @@ import axios from "axios";
 const router = express.Router();
 const userDocument = db.collection("user");
 
+// Forecast days
+const noDaysForecast = 3;
 // get weather by city
 router.get("/search/:id/:city", async (req, res) => {
   req.params.city = decodeURIComponent(req.params.city);
@@ -15,7 +17,7 @@ router.get("/search/:id/:city", async (req, res) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${req.params.city}&days=4`,
+    url: `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${req.params.city}&days=${noDaysForecast}`,
     headers: {},
   };
   let weather = await axios(config);
@@ -31,7 +33,7 @@ router.get("/search/:id/:lat/:long", async (req, res) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${req.params.lat},${req.params.long}&days=4`,
+    url: `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${req.params.lat},${req.params.long}&days=${noDaysForecast}`,
     headers: {},
   };
   let weather = await axios(config);
@@ -51,7 +53,7 @@ router.get("/:id", async (req, res) => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${city}&days=4`,
+        url: `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${city}&days=${noDaysForecast}`,
         headers: {},
       };
       let weather = await axios(config);
